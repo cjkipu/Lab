@@ -1,26 +1,17 @@
 <?php
 session_start();
 include'dbconnection.php';
-if(isset($_POST['signup']))
+if(isset($_GET['id']))
 {
-	$fname=$_POST['fname'];
-	$lname=$_POST['lname'];
-	$add=$_POST['addr'];
-	$msg=mysqli_query($con,"insert into user(first_name,last_name,user_city) values('$fname','$lname','$add');");
-
-/*$regs = $msg -> save();
-
-if ($res){
-	echo "Sign Up Successful";
-}
-else {
-	echo "Sign Up Unsuccessful";
-}*/
+$adminid=$_GET['id'];
+$msg=mysqli_query($con,"delete from user where id='$adminid'");
+if($msg)
+{
+echo "<script>alert('Data deleted');</script>";
 }
 mysqli_close($con);
-?>
-
-<!DOCTYPE html>
+}
+?><!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -29,7 +20,7 @@ mysqli_close($con);
     <meta name="author" content="Dashboard">
     <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
 
-    <title>Create</title>
+    <title>Manage</title>
     <link href="assets/css/bootstrap.css" rel="stylesheet">
     <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
     <link href="assets/css/style.css" rel="stylesheet">
@@ -43,21 +34,22 @@ mysqli_close($con);
               <div class="sidebar-toggle-box">
                   <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
               </div>
-            <a href="#" class="logo"><b>Create</b></a>
+            <a href="#" class="logo"><b>Manage</b></a>
             <div class="nav notify-row" id="top_menu">
                
                          
                    
                 </ul>
             </div>
-
         </header>
-       <aside>
+      <aside>
           <div id="sidebar"  class="nav-collapse ">
               <ul class="sidebar-menu" id="nav-accordion">
               
+
               	  <h5 class="centered"></h5>
               	  	
+
                   <li class="mt">
                       <a href="manageusers.php" >
                           <i class="fa fa-users"></i>
@@ -73,59 +65,57 @@ mysqli_close($con);
                       </a>
                    
                   </li>
-              
-                 
               </ul>
           </div>
       </aside>
-     
       <section id="main-content">
           <section class="wrapper">
-          	<h3><i class="fa fa-angle-right"></i>New User</h3>
-             	
+          	<h3><i class="fa fa-angle-right"></i> Manage Users</h3>
 				<div class="row">
 				
                   
 	                  
                   <div class="col-md-12">
                       <div class="content-panel">
-                      <p align="center" style="color:#F00;"><?php echo $_SESSION['msg']=""; ?></p>
-                           
-							<form class="form-horizontal style-form" name="registration" method="post" action="" enctype="multipart/form-data">
-
-
-                        <div class="form-group">
-							<label class="col-sm-2 col-sm-2 control-label" style="padding-left:40px;">First Name </label>
-							<div class="col-sm-10">
-								<input type="text" class="form-control" value=""  name="fname" required >
-							</div>
-						</div>	
-
-
-						<div class="form-group">
-								<label class="col-sm-2 col-sm-2 control-label" style="padding-left:40px;">Last Name </label>
-								<div class="col-sm-10">
-								<input type="text" class="form-control" value="" name="lname"  required >
-							</div>
-						</div>	
-
-						<div class="form-group">
-								<label class="col-sm-2 col-sm-2 control-label" style="padding-left:40px;">User City </label>
-								<div class="col-sm-10">
-								<input type="text" class="form-control" value="" name="addr"  required>
-							</div>
-						</div>	
-						<div class="sign-up" style="margin-left:100px;">
-								<input type="reset" class="btn btn-theme" value="Reset">
-								<input type="submit" class="btn btn-theme" name="signup"  value="Sign Up" >
-								<div class="clear"> </div>
-						</div>
-							</form>
-                      
+                          <table class="table table-striped table-advance table-hover">
+	                  	  	  <h4><i class="fa fa-angle-right"></i> All User Details </h4>
+	                  	  	  <hr>
+                              <thead>
+                              <tr>
+                                  <th>Sno.</th>
+                                  <th class="hidden-phone">First Name</th>
+                                  <th> Last Name</th>
+                                  <th>Address</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <?php $ret=mysqli_query($con,"select * from user");
+							  $cnt=1;
+							  while($row=mysqli_fetch_array($ret))
+							  {?>
+                              <tr>
+                              <td><?php echo $cnt;?></td>
+                                  <td><?php echo $row['first_name'];?></td>
+                                  <td><?php echo $row['last_name'];?></td>
+                                  <td><?php echo $row['user_city'];?></td>
+                                  <td>
+                                     
+                                     <a href="update-profile.php?uid=<?php echo $row['id'];?>"> 
+                                     <button class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></button></a>
+                                     <a href="manageusers.php?id=<?php echo $row['id'];?>"> 
+                                     <button class="btn btn-danger btn-xs" onClick="return confirm('Do you really want to delete');"><i class="fa fa-trash-o "></i></button></a>
+                                  </td>
+                              </tr>
+                              <?php $cnt=$cnt+1; }?>
+                             
+                              </tbody>
+                          </table>
+                      </div>
                   </div>
               </div>
 		</section>
-      </section></section>
+      </section
+  ></section>
     <script src="assets/js/jquery.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
     <script class="include" type="text/javascript" src="assets/js/jquery.dcjqaccordion.2.7.js"></script>

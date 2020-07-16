@@ -4,11 +4,20 @@ define('DB_USER','root');
 define('DB_PASS' ,'');
 define('DB_NAME', 'btc3205');
 $con = mysqli_connect(DB_SERVER,DB_USER,DB_PASS,DB_NAME);
+class DBConnector
+  {
+    public $conn;
 
-// Check connection
-if (mysqli_connect_errno())
-{
-echo "Failed to connect to MySQL: " . mysqli_connect_error();
- }
-?>
+    function __construct()
+    {
+      $this->conn = mysqli_connect(DB_SERVER, DB_USER, DB_PASS) or die("Error: ".mysqli_error());
+     
+      mysqli_select_db($this->conn, DB_NAME);
+    }
+
+    public function closeDatabase(){
+      mysqli_close($this->conn);
+    }
+  }
+
 

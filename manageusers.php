@@ -85,7 +85,8 @@ mysqli_close($con);
                                   <th>Sno.</th>
                                   <th class="hidden-phone">First Name</th>
                                   <th> Last Name</th>
-                                  <th>Address</th>
+                                  <th>City</th>
+                                  <th>Username</th>
                               </tr>
                               </thead>
                               <tbody>
@@ -98,6 +99,7 @@ mysqli_close($con);
                                   <td><?php echo $row['first_name'];?></td>
                                   <td><?php echo $row['last_name'];?></td>
                                   <td><?php echo $row['user_city'];?></td>
+                                  <td><?php echo $row['username'];?></td>
                                   <td>
                                      
                                      <a href="update-profile.php?uid=<?php echo $row['id'];?>"> 

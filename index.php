@@ -1,25 +1,45 @@
 <?php
-session_start();
-include'dbconnection.php';
-if(isset($_POST['signup']))
-{
-	$fname=$_POST['fname'];
-	$lname=$_POST['lname'];
-	$add=$_POST['addr'];
-	$msg=mysqli_query($con,"insert into user(first_name,last_name,user_city) values('$fname','$lname','$add');");
+  include_once 'dbconnection.php';
+  include_once 'User.php';
+  include_once 'FileUploader.php';
+  $con = new DBConnector;
 
-/*$regs = $msg -> save();
+  if (isset($_POST['signup'])) {
+    $first_name = $_POST['fname'];
+    $last_name = $_POST['lname'];
+    $city = $_POST['addr'];
+    $username = $_POST['usrnam'];
+    $password = $_POST['pass'];
 
-if ($res){
-	echo "Sign Up Successful";
-}
-else {
-	echo "Sign Up Unsuccessful";
-}*/
-}
-mysqli_close($con);
+    $user = new User($first_name, $last_name, $city, $username, $password);
+    if (!$user->validateForm()) {
+        $user->createFormErrorSessions();
+        header("Refresh:0");
+        die();
+    } elseif ($user->isUserExist($con->conn)) {
+        session_start();
+        $_SESSION['username'] = "Username taken.";
+        header("Refresh: 0");
+        die();
+    }
+
+    $uploader = new FileUploader();
+    $uploader->uploadFile();
+    $target_file = $uploader->target_file;
+    $res = $user->save($con->conn, $target_file);
+
+    if ($res) {
+      echo "Save operation successful!";
+      if ($uploader->isUploadOk()){
+          echo "Image uploaded";
+      } else {
+          echo "Not uploaded";
+      }
+    } else {
+      echo "An error occurred!";
+    }
+  }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -37,7 +57,18 @@ mysqli_close($con);
   </head>
 
   <body>
+  <?php
+                        session_start();
+                        if (!empty($_SESSION['form-errors'])) {
+                            echo $_SESSION["form-errors"];
+                            unset($_SESSION['form-errors']);
+                        }
 
+                        if (!empty($_SESSION['username'])) {
+                            echo $_SESSION['username'];
+                            unset($_SESSION['username']);
+                        }
+                    ?>
   <section id="container" >
       <header class="header black-bg">
               <div class="sidebar-toggle-box">
@@ -115,10 +146,32 @@ mysqli_close($con);
 								<input type="text" class="form-control" value="" name="addr"  required>
 							</div>
 						</div>	
+                        <div class="form-group">
+								<label class="col-sm-2 col-sm-2 control-label" style="padding-left:40px;">Username </label>
+								<div class="col-sm-10">
+								<input type="text" class="form-control" value="" name="usrnam"  required>
+							</div>
+						</div>	
+                        <div class="form-group">
+								<label class="col-sm-2 col-sm-2 control-label" style="padding-left:40px;">Password </label>
+								<div class="col-sm-10">
+								<input type="password" class="form-control" value="" name="pass"  required>
+							</div>
+						</div>	
+                        <div class="form-group">
+								<label class="col-sm-2 col-sm-2 control-label" style="padding-left:40px;">Profile Picture </label>
+								<div class="col-sm-10">
+								<input type="file" class="form-control" value="" name="fileToUpload"  required>
+							</div>
+						</div>
 						<div class="sign-up" style="margin-left:100px;">
 								<input type="reset" class="btn btn-theme" value="Reset">
 								<input type="submit" class="btn btn-theme" name="signup"  value="Sign Up" >
 								<div class="clear"> </div>
+						</div>
+                        <br>
+                        <div class="sign-up" style="margin-left:100px;">
+                        <td><a href="login.php">Log In</a> </td>
 						</div>
 							</form>
                       

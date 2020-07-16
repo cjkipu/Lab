@@ -1,5 +1,5 @@
 <?php
-	include_once 'C:\xampp\htdocs\IPLABS\DBConnector.php';
+	include_once 'C:\xampp\htdocs\Lab\dbconnection.php';
 
 	class ApiHandler{
 		private $meal_name;

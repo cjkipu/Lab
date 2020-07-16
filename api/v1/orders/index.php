@@ -1,7 +1,7 @@
 <?php 
 
 include_once 'apiHandler.php';
-include_once '../../../DBConnector.php';
+include_once '../../../dbconnection.php';
 
 $api = new ApiHandler();
 

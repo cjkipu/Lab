@@ -101,9 +101,7 @@ mysqli_close($con);
                                   <td><?php echo $row['user_city'];?></td>
                                   <td><?php echo $row['username'];?></td>
                                   <td>
-                                     
-                                     <a href="update-profile.php?uid=<?php echo $row['id'];?>"> 
-                                     <button class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></button></a>
+                               
                                      <a href="manageusers.php?id=<?php echo $row['id'];?>"> 
                                      <button class="btn btn-danger btn-xs" onClick="return confirm('Do you really want to delete');"><i class="fa fa-trash-o "></i></button></a>
                                   </td>
